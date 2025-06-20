@@ -1,1 +1,5 @@
+# Ignore build folder
 /build
+
+# Sensitive files - do not upload
+app/google-services.json
