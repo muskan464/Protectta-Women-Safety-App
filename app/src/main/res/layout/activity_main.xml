@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Protectta"
+        android:textSize="40sp"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:textColor="@color/blue"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Your Safety in your hands"
+        android:textSize="15sp"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:textColor="@color/blue"/>
+
+
+    <Button
+        android:id="@+id/sosButton"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/btn_large_sos"
+        android:text="SOS"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="40dp"
+        android:textSize="30sp"
+        android:padding="10dp"/>
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:layout_gravity="center">
+
+
+    <TextView
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:id="@+id/add_contact_btn"
+            android:background="@drawable/blue_border"
+            android:padding="20dp"
+            android:text="ADD CONTACT"
+            android:textAlignment="center"
+            android:drawableTop="@drawable/baseline_add_circle_outline_24"
+            android:layout_margin="15dp"
+            android:drawablePadding="8dp"
+            android:textColor="@color/blue"/>
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:id="@+id/help_btn"
+            android:background="@drawable/blue_border"
+            android:padding="20dp"
+            android:text="HELP"
+            android:textAlignment="center"
+            android:drawableTop="@drawable/baseline_add_moderator_24"
+            android:layout_margin="15dp"
+            android:drawablePadding="8dp"
+            android:textColor="@color/blue"/>
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:id="@+id/you_btn"
+            android:background="@drawable/blue_border"
+            android:layout_margin="15dp"
+            android:padding="20dp"
+            android:text="YOU"
+            android:textAlignment="center"
+            android:drawableTop="@drawable/baseline_account_circle_24"
+            android:drawablePadding="8dp"
+            android:textColor="@color/blue"/>
+
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:id="@+id/about_btn"
+            android:text="ABOUT"
+            android:textAlignment="center"
+            android:background="@drawable/blue_border"
+            android:textColorLink="@color/blue"
+            android:layout_margin="15dp"
+            android:padding="20dp"
+            android:drawableTop="@drawable/baseline_question_mark_24"
+            android:drawablePadding="8dp"
+            android:textColor="@color/blue"/>
+
+
+    </GridLayout>
+
+</LinearLayout>

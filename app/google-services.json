@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "947249719240",
+    "project_id": "protectta---women-safety-app",
+    "storage_bucket": "protectta---women-safety-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:947249719240:android:35b6b4058bf1e7c30182fd",
+        "android_client_info": {
+          "package_name": "com.example.protectta_womensafetyapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdcFDVG3h0E_si3j393mb7iGPThZPsn0Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

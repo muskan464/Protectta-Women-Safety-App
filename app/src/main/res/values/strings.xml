@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Protectta - Women Safety App</string>
+
+
+
+    <string name="heading_one">Stay Safe, Stay Connected</string>
+    <string name="heading_two">Instant Alerts</string>
+    <string name="heading_three">Live Location Sharing</string>
+    <string name="heading_fourth">Emergency Assistance</string>
+
+
+    <string name="desc_one">Ensure your safety by instantly alerting your trusted contacts in emergencies.</string>
+    <string name="desc_two">Get real-time notifications whenever an SOS alert is triggered.</string>
+    <string name="desc_three">Share your live location with family and friends for added security.</string>
+    <string name="desc_fourth">Access emergency helplines and assistance with just one tap.</string>
+
+
+    <string name="emergency_tips">"🚨 Emergency Numbers:\n\n• Women Helpline (All India): 1091\n• Police: 100\n• National Emergency Number: 112\n• Domestic Abuse Helpline: 181\n• Child Helpline: 1098"</string>
+    <string name="safety_tips">"💡 Safety Tips:\n\n• Always share your location with a trusted contact.\n• Avoid isolated areas at night.\n• Keep emergency contacts updated in your phone.\n• Use women safety apps with real-time location tracking.\n• Stay alert and trust your instincts."</string>
+    <string name="app_detail">App Version: 1.0.0\nDeveloped by: Muskan Jaiswal</string>
+    <string name="help_title">"Women Safety Help"</string>
+    <string name="team_detail">"Team Members (College Submission Purpose Only):\n• Your Name (Lead Developer)\n• Member 1\n• Member 2\n• Member 3"</string>
+    <string name="about_des">"Protectta is a women safety application developed to provide fast and effective help in emergencies. It offers features like SOS alerts, live location sharing, emergency contacts, and helpful safety tips.\n\nOur mission is to empower women with a digital tool they can trust in times of need.</string>
+    <string name="about_title">"Protectta - Women Safety App"</string>
+
+</resources>
