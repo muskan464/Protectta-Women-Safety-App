@@ -1,29 +1,18 @@
 package com.example.protectta_womensafetyapp;
 
 import android.os.Bundle;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.ArrayAdapter;
-
-import androidx.annotation.NonNull;
+import android.widget.*;
+import androidx.annotation.*;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.*;
 import java.util.ArrayList;
 
 public class UserInfo extends AppCompatActivity {
-
     private TextView userName, userMail;
     private ListView contactList;
     private ArrayAdapter<String> adapter;
     private ArrayList<String> contactData;
-    private String loggedInUsername; // This should be passed from SharedPreferences or intent
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,51 +27,43 @@ public class UserInfo extends AppCompatActivity {
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, contactData);
         contactList.setAdapter(adapter);
 
-        // Get logged in user from SharedPreferences
-        loggedInUsername = getSharedPreferences("UserPrefs", MODE_PRIVATE).getString("username", null);
-
-        if (loggedInUsername != null) {
-            loadUserInfo(loggedInUsername);
+        String uid = getIntent().getStringExtra("uid");
+        if (uid != null) {
+            loadUserInfo(uid);
         }
     }
 
-    private void loadUserInfo(String username) {
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(username);
+    private void loadUserInfo(String uid) {
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(uid);
 
-        // Load name and email
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String name = snapshot.child("name").getValue(String.class);
-                String email = snapshot.child("email").getValue(String.class);
-
-                if (name != null) userName.setText(name);
-                if (email != null) userMail.setText(email);
+                if (snapshot.exists()) {
+                    String name = snapshot.child("name").getValue(String.class);
+                    String email = snapshot.child("email").getValue(String.class);
+                    userName.setText(name);
+                    userMail.setText(email);
+                }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // Handle error
-            }
+            public void onCancelled(@NonNull DatabaseError error) { }
         });
 
-        // Load contacts
         userRef.child("contacts").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 contactData.clear();
-                for (DataSnapshot contactSnapshot : snapshot.getChildren()) {
-                    String contactName = contactSnapshot.child("contactName").getValue(String.class);
-                    String contactNumber = contactSnapshot.child("contactNumber").getValue(String.class);
-                    contactData.add(contactName + " - " + contactNumber);
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    String cname = ds.child("contactName").getValue(String.class);
+                    String cnum = ds.child("contactNumber").getValue(String.class);
+                    contactData.add(cname + " – " + cnum);
                 }
                 adapter.notifyDataSetChanged();
             }
-
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // Handle error
-            }
+            public void onCancelled(@NonNull DatabaseError error) { }
         });
     }
 }

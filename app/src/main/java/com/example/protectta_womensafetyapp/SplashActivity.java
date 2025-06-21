@@ -1,15 +1,11 @@
 package com.example.protectta_womensafetyapp;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -18,42 +14,32 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_splash);
 
-        new Handler().postDelayed(() -> {
-            SharedPreferences onboardingPrefs = getSharedPreferences("OnboardingPrefs", MODE_PRIVATE);
-            boolean isFirstTime = onboardingPrefs.getBoolean("isFirstTime", true);
+        new Handler().postDelayed(this::checkLaunchLogic, SPLASH_DELAY);
+    }
 
-            if (isFirstTime) {
-                // Mark onboarding as shown
-                SharedPreferences.Editor editor = onboardingPrefs.edit();
-                editor.putBoolean("isFirstTime", false);
-                editor.apply();
-
-                // Show onboarding screen
-                startActivity(new Intent(SplashActivity.this, MainOnBoardingScreenActivity.class));
-            } else {
-                // Check if user is already logged in
-                SharedPreferences userPrefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-                String username = userPrefs.getString("username", null);
-
-                if (username != null) {
-                    // User is logged in, go to main screen
-                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                } else {
-                    // User not logged in, show login screen
-                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                }
-            }
-
+    private void checkLaunchLogic() {
+        // 1️⃣ Check onboarding status
+        boolean isFirstTime = getSharedPreferences("OnboardingPrefs", MODE_PRIVATE)
+                .getBoolean("isFirstTime", true);
+        if (isFirstTime) {
+            getSharedPreferences("OnboardingPrefs", MODE_PRIVATE)
+                    .edit().putBoolean("isFirstTime", false).apply();
+            startActivity(new Intent(this, MainOnBoardingScreenActivity.class));
             finish();
-        }, SPLASH_DELAY);
+            return;
+        }
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        // 2️⃣ The user has completed onboarding → check Firebase login status
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // ✅ Already logged in — skip login
+            startActivity(new Intent(this, MainActivity.class));
+        } else {
+            // ❌ Not logged in — show login screen
+            startActivity(new Intent(this, LoginActivity.class));
+        }
+        finish();
     }
 }

@@ -2,74 +2,86 @@ package com.example.protectta_womensafetyapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.activity.EdgeToEdge;
+import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.*;
+import com.google.firebase.database.*;
 
 public class SignupActivity extends AppCompatActivity {
-
-    EditText signupName,signupEmail,signupUsername,signupPassword;
-    TextView loginRedirectText;
-    Button signupButton;
-    FirebaseDatabase database;
-    DatabaseReference reference;
+    EditText editTextName, editTextEmail, editTextPassword;
+    Button buttonSignup;
+    TextView textViewLogin;
+    ProgressBar progressBar;
+    FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_signup);
+        auth = FirebaseAuth.getInstance();
 
-        signupName=findViewById(R.id.signup_name);
-        signupEmail=findViewById(R.id.signup_mail);
-        signupUsername=findViewById(R.id.signup_username);
-        signupPassword=findViewById(R.id.signup_password);
-        signupButton=findViewById(R.id.signup_btn);
-        loginRedirectText=findViewById(R.id.loginRedirectTxt);
+        editTextName = findViewById(R.id.name);
+        editTextEmail = findViewById(R.id.email);
+        editTextPassword = findViewById(R.id.password);
+        buttonSignup = findViewById(R.id.signup);
+        textViewLogin = findViewById(R.id.login);
+        progressBar = findViewById(R.id.progressBar);
 
-        signupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                database=FirebaseDatabase.getInstance();
-                reference=database.getReference("users");
-
-                String name=signupName.getText().toString();
-                String email=signupEmail.getText().toString();
-                String username=signupUsername.getText().toString();
-                String password=signupPassword.getText().toString();
-
-                HelperClass helperClass=new HelperClass(name,email,username,password);
-                reference.child(username).setValue(helperClass);
-
-                Toast.makeText(SignupActivity.this, "You have signup successfully", Toast.LENGTH_SHORT).show();
-                Intent intent=new Intent(SignupActivity.this,LoginActivity.class);
-                startActivity(intent);
-            }
+        buttonSignup.setOnClickListener(v -> registerUser());
+        textViewLogin.setOnClickListener(v -> {
+            startActivity(new Intent(SignupActivity.this, LoginActivity.class));
+            finish();
         });
+    }
 
-        loginRedirectText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent= new Intent(SignupActivity.this,LoginActivity.class);
-                startActivity(intent);
-            }
-        });
+    private void registerUser() {
+        String name = editTextName.getText().toString().trim();
+        String email = editTextEmail.getText().toString().trim();
+        String password = editTextPassword.getText().toString().trim();
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        if (TextUtils.isEmpty(name)) {
+            editTextName.setError("Enter name");
+            editTextName.requestFocus();
+            return;
+        }
+        if (TextUtils.isEmpty(email)) {
+            editTextEmail.setError("Enter email");
+            editTextEmail.requestFocus();
+            return;
+        }
+        if (TextUtils.isEmpty(password)) {
+            editTextPassword.setError("Enter password");
+            editTextPassword.requestFocus();
+            return;
+        }
+
+        progressBar.setVisibility(View.VISIBLE);
+
+        auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    progressBar.setVisibility(View.GONE);
+                    if (task.isSuccessful() && auth.getCurrentUser() != null) {
+                        String uid = auth.getCurrentUser().getUid();
+                        User userData = new User(name, email);
+                        FirebaseDatabase.getInstance().getReference("users")
+                                .child(uid)
+                                .setValue(userData)
+                                .addOnCompleteListener(task1 -> {
+                                    if (task1.isSuccessful()) {
+                                        Toast.makeText(SignupActivity.this, "Signup successful", Toast.LENGTH_SHORT).show();
+                                        startActivity(new Intent(SignupActivity.this, LoginActivity.class));
+                                        finish();
+                                    } else {
+                                        Toast.makeText(SignupActivity.this, "Failed to save user data", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    } else {
+                        Toast.makeText(SignupActivity.this,
+                                "Signup failed: " + task.getException().getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }
